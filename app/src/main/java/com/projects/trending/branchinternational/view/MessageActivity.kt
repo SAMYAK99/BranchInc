@@ -12,8 +12,8 @@ import com.projects.trending.branchinternational.adapters.MessageAdapter
 import com.projects.trending.branchinternational.databinding.ActivityMessageBinding
 import com.projects.trending.branchinternational.model.MessagesItem
 import com.projects.trending.branchinternational.utils.PreferenceData.clearLoggedInUserId
-import com.projects.trending.branchinternational.viewmodels.MainViewModelFactory
 import com.projects.trending.branchinternational.viewmodels.MainViewModel
+import com.projects.trending.branchinternational.viewmodels.MainViewModelFactory
 
 
 class MessageActivity : AppCompatActivity() {
@@ -23,6 +23,7 @@ class MessageActivity : AppCompatActivity() {
     private lateinit var messAdapter: MessageAdapter
     private lateinit var list: MutableList<MessagesItem>
     private lateinit var viewModel: MainViewModel
+    private var pressedTime: Long = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,12 +69,21 @@ class MessageActivity : AppCompatActivity() {
     }
 
         private fun prepareRecyclerView() {
-
             messAdapter = MessageAdapter(list, context = this)
             binding.rvMessages.apply {
                 layoutManager = LinearLayoutManager(context)
                 adapter = messAdapter
             }
         }
+
+    override fun onBackPressed() {
+        if (pressedTime + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed()
+            finish()
+        } else {
+            Toast.makeText(baseContext, "Press back again to exit", Toast.LENGTH_SHORT).show()
+            pressedTime = System.currentTimeMillis()
+        }
+    }
 
     }
